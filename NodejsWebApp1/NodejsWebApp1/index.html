@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Deltiin India Tech Pvt. Ltd.</title>
+      <link rel = "icon" type = "image/png" href = "img/logo-rbg.png" sizes="16x16">
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <style>
+         .dot {
+  height: 25px;
+  width: 25px;
+  background-color: rgb(122, 121, 121);
+  border-radius: 50%;
+  display: inline-block;
+}
+#timeToRender {
+		position:absolute; 
+		top: 10px; 
+		font-size: 20px; 
+		font-weight: bold; 
+		background-color: #d85757;
+		padding: 0px 4px;
+		color: #ffffff;
+	}
+     </style>
+    </head>
+  <body onload="star()">
+      <div style="padding:5%">
+    </div>
+    <table width="100%" style="text-align:center;">
+        <tr>
+            <th colspan="2"><span id="l1" class="dot"></span></th>
+            <th colspan="2"><span id="l2" class="dot"></span></th>    
+        </tr>
+        <tr>
+           <td> <button id="light1on" onclick="l1on()" >Switch on light1</button></td>
+           <td> <button id="light1off" onclick="l1off()"> Switch Off Light1</button></td>
+           <td><button id="light2on" onclick="l2on()" >Switch on light1</button></td>
+           <td><button id="light2off" onclick="l2off()"> Switch Off Light1</button></td>
+        </tr>
+    
+        </table>
+        <div style="padding:1%"></div>
+        <table>
+            <tr>
+                <th ><button id="temp" onclick="temp('1')">Get Temperature data</button></th>
+                <th ><button id="humidity" onclick="temp('0')">Get Humidity data</button></th>
+                <th ><button id="gas" onclick="temp('2')">Get gas data</button></th>
+            </tr>
+        </table>
+        <div id="chart" style="height: 370px;width:100%"></div>
+            
+        
+
+    </body>
+    <script>
+        function star(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var a=JSON.parse(this.responseText);
+                    console.log(this.responseText);
+                    if (a[0]['light1']=="0"){
+                    document.getElementById('l1').style.backgroundColor='black';
+                    }
+                    else{
+                        document.getElementById('l1').style.backgroundColor='red';
+                    }
+                    if (a[0]['light2']=="0"){
+                    document.getElementById('l2').style.backgroundColor='black';
+                    }
+                    else{
+                        document.getElementById('l2').style.backgroundColor='red';
+                    }
+                }
+            };
+            xmlhttp.open("GET", "light", true);
+            xmlhttp.send();
+        }
+        function temp(sense){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var type;
+                    var b=JSON.parse(this.responseText);
+                   if(sense=="0") {type="humidity";                 
+                    }
+                    if(sense=="1") {type="temperature";
+                    }
+                    if(sense=="2") {type="gas";
+                        }
+                        google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.setOnLoadCallback(drawBasic);
+
+function drawBasic() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('date', 'Time');
+      data.addColumn('number', 'Value');
+
+     
+      for(var i=0;i<b.length;i++ ){
+          var mm=new Date(b[i]['time']);
+data.addRow([mm,parseInt(b[i][type]) 
+]);
+
+}
+      
+
+      var options = {
+        hAxis: {
+          title: 'Time'
+        },
+        vAxis: {
+          title: 'Popularity'
+        }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart'));
+
+      chart.draw(data, options);
+    }
+      
+
+
+
+
+                     }};
+            xmlhttp.open("GET", "data?d="+sense, true);
+            xmlhttp.send();
+        }
+        
+        function l1on(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    star();
+
+                }
+            };
+            xmlhttp.open("GET", "l1on", true);
+            xmlhttp.send();
+        }
+        function l1off(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    star();
+                }
+            };
+            xmlhttp.open("GET", "l1off", true);
+            xmlhttp.send();
+        }
+        function l2on(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    star();
+                }
+            };
+            xmlhttp.open("GET", "l2on", true);
+            xmlhttp.send();
+        }
+        function l2off(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    
+                    star();
+
+                }
+            };
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "l2off", true);
+            xmlhttp.send();
+        }
+
+
+        
+    </script> 
+  </html>
